@@ -17,7 +17,11 @@ module MIME
     # word.scan(/(.,?){1,78}/) OR word.split
     #
     def to_s
-      @headers.to_a.map {|kv| kv.join(": ")}.join("\r\n")
+      # For our purposes the Content-Type header must come first
+      ct = @headers.find {|k,v| k.downcase == "content-type"}
+      h = @headers.reject{|k,v| k.downcase == "content-type"}
+                  .to_a.map {|kv| kv.join(": ")}.join("\r\n")
+      ct ? ct.join(": ") + "\r\n" + h : h
     end
 
     #
