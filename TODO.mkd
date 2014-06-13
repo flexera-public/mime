@@ -1,0 +1,43 @@
+* Run examples, test cases, and scaffold through message lint:
+  - http://www.apps.ietf.org/content/message-lint
+  - http://tools.ietf.org/tools/msglint/
+
+* Need to actually send the output of some of these examples with various email 
+  clients and make sure everything works.
+
+* Add missing RFC5322 field headers:
+
+  - [Resent field headers](https://tools.ietf.org/html/rfc5322#section-3.6.6)
+  - [Trace field headers](https://tools.ietf.org/html/rfc5322#section-3.6.7)
+
+* May need to recursively call #to_s on body entities in CompositeMedia::Body to 
+  propery render nested CompositeMedia entities.
+
+  The library currently works with 3 levels of nesting:
+  Composite (Multipart/Alternative) > Composite (Multipart/Related) > Discrete
+
+  Don't have a reason to test anything more complex than this.
+
+* Yield to #new so we can
+
+  msg = Message.new do |m|
+    m.subject = 'This is important'
+    m.headers.add('X-Priority', 'high')   # custom header
+    m.body = TextMedia.new('hello, worl
+  end
+
+* Add cool method #<< for attaching/adding entities to messages???
+
+* Wrap or tab down long header lines. For example, following header is 86
+  charters long as a single line:
+
+  Content-Type: multipart/form-data; boundary=Boundary_133962021234000.34563127715936903
+
+  But when boundary is entered down, the longest line is 52, including the tab
+  start. The RFC states that a white space character (space or tab) can prefix a
+  continued header line. Will have to double check that and reference the RFC.
+
+  Content-Type: multipart/form-data; \r\n
+  \tboundary=Boundary_133962021234000.34563127715936903
+
+  May also need to wrap the To/From/Cc/Bcc fields as well
