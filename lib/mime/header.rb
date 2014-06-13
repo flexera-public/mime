@@ -41,7 +41,7 @@ module MIME
     # Delete header associated with +name+.
     #
     def delete name
-      @headers.delete_if {|k| name.downcase == k.downcase }
+      @headers.delete_if {|k,v| name.downcase == k.downcase }
     end
 
   end
